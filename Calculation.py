@@ -1,0 +1,104 @@
+import Pencatatan
+import Database
+historyr = []
+historyp = []
+
+def Flat(participant, payer):
+    item = input("nama produk: ")
+    harga = Pencatatan.Check(pesan="Harga satuan: ", eror="input yang bener la")
+    p = Database.akses()
+    debt = p[2]
+    for i in range(len(participant)):
+        riwayatr = {"nama" : participant[i]}
+        historyr.append(riwayatr)
+        if participant[i] == payer:
+            continue
+        else:
+            hutang = {}
+            hutang = {"nama" : participant[i], "jumlah" : harga, "ke" : payer}
+            debt.append(hutang)
+    return [historyr, item, harga, debt]
+
+
+def Per_Item(participant, payer):
+    list_peritem = []
+    print("catat masing-masing membeli apa:")
+    for i in range(len(participant)):
+        pemilik = {}
+        produk = []
+        print(f"{i+1}. {participant[i]}: ")
+        while True:
+            item = {}
+            x = input(f"item: ")
+            if x == ".": break
+            y = Pencatatan.Check(pesan="harga: ", eror="harga tidak valid!")
+            item = {"item": x, "harga": y }
+            produk.append(item)
+        jum = 0
+        for j in range(len(produk)):
+            jum += produk[j]["harga"]
+    
+        pemilik = {"punya": participant[i], "produk": produk, "total": jum}
+        list_peritem.append(pemilik)
+        
+        p = Database.akses()
+        debt = p[2]    
+    for i in range(len(list_peritem)):
+        hutang = {}
+        riwayat = {"nama" : list_peritem[i]["punya"], "produk": list_peritem[i]["produk"]}
+        historyp.append(riwayat)
+        if list_peritem[i]["punya"] == payer:
+            continue
+        else:
+            hutang = {"nama" : list_peritem[i]["punya"], "jumlah" : list_peritem[i]["total"], "ke" : payer}
+            debt.append(hutang)
+    return [historyp, debt]
+    
+
+def Net_Debt():
+    p = Database.akses()
+    debt = p[2]
+    rihu = p[3]
+    panjang = len(debt)
+    try:    
+        for i in range(panjang):
+            for j in range(panjang):
+                srh = {}
+                jmlh = 0
+                if i == j:
+                    continue
+                if debt[i]["nama"] == debt[j]["nama"] and debt[i]["ke"] == debt[j]["ke"]:
+                    jmlh = debt[i]["jumlah"] + debt[j]["jumlah"]
+                    srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} + {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"]}
+                    debt[i]["jumlah"] = jmlh
+                    rihu.append(srh)
+                    debt[j]["ke"] = ""
+                elif debt[i]["nama"] == debt[j]["ke"] and debt[i]["ke"] == debt[j]["nama"]:
+                    if debt[i]["jumlah"] > debt[j]["jumlah"]:
+                        jmlh = debt[i]["jumlah"] - debt[j]["jumlah"]
+                        srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} - {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"]}
+                        debt[i]["jumlah"] = jmlh
+                        rihu.append(srh)
+                        debt[j]["ke"] = ""
+                    elif debt[i]["jumlah"] < debt[j]["jumlah"]:
+                        jmlh = debt[j]["jumlah"] - debt[i]["jumlah"]
+                        srh = {"nama": debt[j]["nama"], "jumlah": f"{debt[j]["jumlah"]} - {debt[i]["jumlah"]} = {jmlh}", "ke": debt[j]["ke"]}
+                        debt[j]["jumlah"] = jmlh
+                        rihu.append(srh)                        
+                        debt[i]["ke"] = ""
+                    else:
+                        srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} - {debt[j]["jumlah"]} = 0", "ke": debt[i]["ke"]}
+                        rihu.append(srh)                        
+                        debt[i]["ke"] = ""
+                        debt[j]["ke"] = ""
+    except IndexError: pass
+    print(rihu)
+
+    for i in range(panjang, 0, -1):
+        try:
+            if debt[i]["ke"] == "":
+                debt.pop(i)
+        except IndexError: pass
+    simpan = {"users": p[0], "riwayat": p[1], "hutang": debt, "rh": rihu}
+    Database.Save(simpan)
+    return [debt, rihu]
