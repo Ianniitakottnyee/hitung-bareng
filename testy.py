@@ -1,7 +1,3 @@
-import Calculation
-import History
-
-
-hutang = Calculation.Net_Debt()
-History.History_Hutang(hutang)
-
+lis = [1, 2, 3]
+lis.clear()
+print(lis)

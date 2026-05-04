@@ -1,11 +1,21 @@
 import Pencatatan
 import Database
-historyr = []
-historyp = []
 
 def Flat(participant, payer):
+    historyr = []
     item = input("nama produk: ")
-    harga = Pencatatan.Check(pesan="Harga satuan: ", eror="input yang bener la")
+    ptan = input("Harga satuan/Harga total?(s/t): ")
+    if ptan.title() == "Harga satuan" or ptan.lower() == "s":
+        harga = Pencatatan.Check(pesan="Harga satuan: ", eror="input yang bener la")
+    else:
+        harga = Pencatatan.Check(pesan="Harga total: ", eror="input yang bener la")
+        harga = harga/len(participant)
+        if harga % 10 != 0:
+            if harga % 1000 < 500:
+                harga = harga - (harga % 1000)
+            else:
+                harga = harga - (harga % 1000) + 1000
+
     p = Database.akses()
     debt = p[2]
     for i in range(len(participant)):
@@ -17,10 +27,12 @@ def Flat(participant, payer):
             hutang = {}
             hutang = {"nama" : participant[i], "jumlah" : harga, "ke" : payer}
             debt.append(hutang)
+
     return [historyr, item, harga, debt]
 
 
 def Per_Item(participant, payer):
+    historyp = []
     list_peritem = []
     print("catat masing-masing membeli apa:")
     for i in range(len(participant)):
@@ -67,6 +79,13 @@ def Net_Debt():
                 jmlh = 0
                 if i == j:
                     continue
+                if debt[i]["jumlah"] < 0:
+                    nama = debt[i]["nama"]
+                    debt[i]["nama"] = debt[i]["ke"]
+                    debt[i]["ke"] = nama
+                    debt[i]["jumlah"] = debt[i]["jumlah"] / -1
+                    srh = {"nama": debt[i]["nama"], "jumlah": {debt[i]["jumlah"]}, "ke": debt[i]["ke"]}
+                    rihu.append(srh)                 
                 if debt[i]["nama"] == debt[j]["nama"] and debt[i]["ke"] == debt[j]["ke"]:
                     jmlh = debt[i]["jumlah"] + debt[j]["jumlah"]
                     srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} + {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"]}
@@ -92,11 +111,10 @@ def Net_Debt():
                         debt[i]["ke"] = ""
                         debt[j]["ke"] = ""
     except IndexError: pass
-    print(rihu)
 
     for i in range(panjang, 0, -1):
         try:
-            if debt[i]["ke"] == "":
+            if debt[i]["ke"] == "" or debt[i]["jumlah"] == 0:
                 debt.pop(i)
         except IndexError: pass
     simpan = {"users": p[0], "riwayat": p[1], "hutang": debt, "rh": rihu}

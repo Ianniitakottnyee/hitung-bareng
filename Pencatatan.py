@@ -2,10 +2,12 @@ import User
 import time
 import Calculation
 import Database
+import History
+"""
 history = {}
 riwayat = []
 simpan = {}
-
+"""
 def Transaction():
     print("Pilih mode:\n1. Pembagian Rata\n2. Pencatatan per-item")
     while True:
@@ -138,4 +140,59 @@ def description(teks, panjang=60):
                 continue
             chat[i]= chat[i] + "-"
     return chat
+
+def pay():
+    p = Database.akses()
+    hutang = p[2]
+    rihu = p[3]
+    History.History_Hutang(hutang)
+
+    print("============  Pembayaran  ============")
+    payer = None
+    while payer == None:    
+        payer = input("Siapa yang membayar: ")
+        for i in range(len(hutang)):
+            if payer.title() == hutang[i]["nama"]:
+                break
+        else:
+            print(f"{payer.title()} tidak memiliki hutang. Silahkan input ulang pembayar.")
+            payer = None
+
+    to = None
+    while to == None:    
+        to = input("Bayar ke ")
+        for i in range(len(hutang)):
+            if to.title() == hutang[i]["ke"]:
+                break
+        else:
+            print(f"{payer.title()} tidak memiliki hutang ke {to.title()}. Silahkan input ulang.")
+            to = None    
+
+    for i in range(len(hutang)):
+        if payer.title() == hutang[i]["nama"] and to.title() == hutang[i]["ke"]:
+            jumlah = Check("Jumlah yang dibayarkan: ", "input tidak valid!")
+
+            hutang[i]["jumlah"] = hutang[i]["jumlah"] - jumlah
+            
+            Calculation.Net_Debt()
+
+            riwayathutang = {"nama": hutang[i]["nama"], "membayar": jumlah, "ke": hutang[i]["ke"], "hutang": hutang[i]["jumlah"]}
+            rihu.append(riwayathutang)
+
+            if hutang[i]["jumlah"] > 0:
+                print(f"hutang {hutang[i]["nama"]} ke {hutang[i]["ke"]} sisa {hutang[i]["jumlah"]}")
+            elif hutang[i]["jumlah"] == 0:
+                print(f"hutang {hutang[i]["nama"]} ke {hutang[i]["ke"]} lunas!")
+            else:
+                sisa = hutang[i]["jumlah"]/-1
+                cetak = "%g"% sisa
+                print(f"{hutang[i]["ke"]} sekarang berhutang {cetak} ke {hutang[i]["nama"]}")
+
+            simpan = {"users": p[0], "riwayat": p[1], "hutang": hutang, "rh": rihu}
+            Database.Save(simpan)
+
+            break
+
+
+            
 

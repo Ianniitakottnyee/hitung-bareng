@@ -44,19 +44,25 @@ try:
                 r = Pencatatan.Check(pesan="riwayat: ", eror="mode yang dipilih tidak valid!")            
                 if r == 1:
                     try:
-                        History.History(p[1])
+                        if p[1] == []:
+                            print("Belum ada riwayat transaksi.")
+                        else:
+                            History.History(p[1])
                     except KeyError: print("Belum ada riwayat transaksi.")
                     break
                 elif r == 2:
                     Calculation.Net_Debt()
                     try:
-                        History.History_Hutang(p[2])
-                    except KeyError: print("Belum ada riwayat hutang.")
+                        if p[2] == []:
+                            print("Riwayat hutang kosong.")
+                        else:
+                            History.History_Hutang(p[2])
+                    except KeyError: print("Riwayat hutang kosong.")
                     break
                 else:
                     print("mode tidak valid.")
         elif fitur == 4:
-            ...
+            Pencatatan.pay()
         elif fitur == 5:
             User.Show_Users()
             User.Delete_User()
