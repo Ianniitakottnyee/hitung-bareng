@@ -48,14 +48,18 @@ def Transaction():
     
     t = Database.akses()
     riwayat = t[1]
+    try:
+        trans = riwayat[-1]["trans"] + 1
+    except KeyError, IndexError:
+        trans = 0
     deskripsi = input("Tambahkan deskripsi:\n")
     jam = Timeisit()
 
     if mode == 1:
         f = Calculation.Flat(participant, payer)
-        history = {"part": f[0], "deskripsi": deskripsi, "waktu": jam, "payer": payer,"produk":f[1], "harga": f[2], "tipe": "f"}
+        history = {"part": f[0], "deskripsi": deskripsi, "waktu": jam, "payer": payer,"produk":f[1], "harga": f[2], "tipe": "f", "trans": trans}
         riwayat.append(history)
-        simpan = {"users": t[0], "riwayat": riwayat, "hutang": f[3], "rh": t[3]}
+        simpan = {"users": t[0], "riwayat": riwayat, "hutang": f[3], "rh": t[3], "trans": trans}
     else: 
         p = Calculation.Per_Item(participant, payer)
         history = {"part": p[0], "deskripsi": deskripsi, "waktu": jam, "payer": payer, "tipe": "p"}
@@ -171,12 +175,12 @@ def pay():
     for i in range(len(hutang)):
         if payer.title() == hutang[i]["nama"] and to.title() == hutang[i]["ke"]:
             jumlah = Check("Jumlah yang dibayarkan: ", "input tidak valid!")
-
+            hutangs = hutang[i]["jumlah"]
             hutang[i]["jumlah"] = hutang[i]["jumlah"] - jumlah
             
             Calculation.Net_Debt()
 
-            riwayathutang = {"nama": hutang[i]["nama"], "membayar": jumlah, "ke": hutang[i]["ke"], "hutang": hutang[i]["jumlah"]}
+            riwayathutang = {"nama": hutang[i]["nama"], "hutang": hutangs, "ke": hutang[i]["ke"], "bayar": jumlah, "sisa": hutang[i]["jumlah"], "status": f"Lunas" if {hutang[i]["jumlah"] == 0} else "Belum lunas", "net": "bayar"}
             rihu.append(riwayathutang)
 
             if hutang[i]["jumlah"] > 0:
@@ -192,7 +196,3 @@ def pay():
             Database.Save(simpan)
 
             break
-
-
-            
-

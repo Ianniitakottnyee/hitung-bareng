@@ -6,4 +6,8 @@ import Calculation
 #Calculation.Net_Debt()
 #Pencatatan.pay()
 
-History.History_Pembayaran()
+#Calculation.Net_Debt()
+p = Database.akses()
+print(p[3])
+
+"bayar, gabung, tambah, swap"

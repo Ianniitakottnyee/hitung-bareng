@@ -100,7 +100,7 @@ def History_Pembayaran():
     print("===================================================") 
     print(f"{space.ljust(16)}Riwayat Pembayaran {space.ljust(16)}")
     print("+---+--------------+--------------+---------------+")
-    print(f"|No |     {"Nama".ljust(6)}   |    {"Dibayarkan".ljust(6)}    |    {"Ke".ljust(6)}   |")
+    print(f"|No |     {"Nama".ljust(6)}   |    {"Dibayarkan".ljust(6)}    |    {"Ke".ljust(6)}   |    {"Status/Sisa".ljust(6)}    |")
     print("+---+--------------+--------------+---------------+")
     for i in range(len(pembayaran)):
         cetak = "%g"% pembayaran[i]["jumlah"]

@@ -83,38 +83,39 @@ def Net_Debt():
                     nama = debt[i]["nama"]
                     debt[i]["nama"] = debt[i]["ke"]
                     debt[i]["ke"] = nama
-                    debt[i]["jumlah"] = debt[i]["jumlah"] / -1
-                    srh = {"nama": debt[i]["nama"], "jumlah": {debt[i]["jumlah"]}, "ke": debt[i]["ke"]}
+                    sisa = debt[i]["jumlah"] / -1
+                    srh = {"nama": debt[i]["ke"], "hutang": debt[i]["jumlah"], "ke": debt[i]["nama"], "sisa": sisa, "status": "Ditukar", "net": "swap"}
+                    debt[i]["jumlah"] = sisa
                     rihu.append(srh)                 
                 if debt[i]["nama"] == debt[j]["nama"] and debt[i]["ke"] == debt[j]["ke"]:
                     jmlh = debt[i]["jumlah"] + debt[j]["jumlah"]
-                    srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} + {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"]}
+                    srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} + {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"], "status": "Belum lunas", "net": "tambah"}
                     debt[i]["jumlah"] = jmlh
                     rihu.append(srh)
                     debt[j]["ke"] = ""
                 elif debt[i]["nama"] == debt[j]["ke"] and debt[i]["ke"] == debt[j]["nama"]:
                     if debt[i]["jumlah"] > debt[j]["jumlah"]:
                         jmlh = debt[i]["jumlah"] - debt[j]["jumlah"]
-                        srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} - {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"]}
+                        srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} - {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"], "status": "Belum lunas", "net": "gabung"}
                         debt[i]["jumlah"] = jmlh
                         rihu.append(srh)
                         debt[j]["ke"] = ""
                     elif debt[i]["jumlah"] < debt[j]["jumlah"]:
                         jmlh = debt[j]["jumlah"] - debt[i]["jumlah"]
-                        srh = {"nama": debt[j]["nama"], "jumlah": f"{debt[j]["jumlah"]} - {debt[i]["jumlah"]} = {jmlh}", "ke": debt[j]["ke"]}
+                        srh = {"nama": debt[j]["nama"], "jumlah": f"{debt[j]["jumlah"]} - {debt[i]["jumlah"]} = {jmlh}", "ke": debt[j]["ke"], "status": "Belum lunas", "net": "gabung"}
                         debt[j]["jumlah"] = jmlh
                         rihu.append(srh)                        
                         debt[i]["ke"] = ""
                     else:
-                        srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} - {debt[j]["jumlah"]} = 0", "ke": debt[i]["ke"]}
+                        srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} - {debt[j]["jumlah"]} = 0", "ke": debt[i]["ke"], "status": "Lunas", "net": "gabung"}
                         rihu.append(srh)                        
                         debt[i]["ke"] = ""
                         debt[j]["ke"] = ""
     except IndexError: pass
 
-    for i in range(panjang, 0, -1):
+    for i in range(panjang, -1, -1):
         try:
-            if debt[i]["ke"] == "" or debt[i]["jumlah"] == 0:
+            if debt[i]["ke"] == "" or debt[i]["jumlah"] == 0.0:
                 debt.pop(i)
         except IndexError: pass
     simpan = {"users": p[0], "riwayat": p[1], "hutang": debt, "rh": rihu}
