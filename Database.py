@@ -28,3 +28,12 @@ def akses():
         riwhutang = data["rh"]
     except KeyError: riwhutang = []
     return [users, riwayat, hutang, riwhutang]
+
+def clearrh():
+    p = akses()
+    if p[3] == []:
+        print("Riwayat kosong!")
+    else:
+        simpan = {"users": p[0], "riwayat": p[1], "hutang": p[2], "rh": []}
+        Save(simpan)
+        print("Riwayat perhitungan berhasil dihapus!")

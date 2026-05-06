@@ -94,17 +94,33 @@ def History_Hutang(hutang):
         print("+---+--------------+--------------+---------------+")
         i += 1
 
-def History_Pembayaran():
+def History_Perhitungan():
     p = Database.akses()
     pembayaran = p[3]
-    print("===================================================") 
-    print(f"{space.ljust(16)}Riwayat Pembayaran {space.ljust(16)}")
-    print("+---+--------------+--------------+---------------+")
-    print(f"|No |     {"Nama".ljust(6)}   |    {"Dibayarkan".ljust(6)}    |    {"Ke".ljust(6)}   |    {"Status/Sisa".ljust(6)}    |")
-    print("+---+--------------+--------------+---------------+")
-    for i in range(len(pembayaran)):
-        cetak = "%g"% pembayaran[i]["jumlah"]
-        print( f"|{i+1}. | {pembayaran[i]["nama"].ljust(12)} | {str(cetak).ljust(12)} | {pembayaran[i]["ke"].ljust(13)} |")
-        print("+---+--------------+--------------+---------------+")
-        i += 1
+    if pembayaran == []:
+        print("Riwayat perhitungan kosong!!")
+    else:    
+        print("===================================================") 
+        print(f"{space.ljust(16)}Riwayat Pembayaran {space.ljust(16)}")
+        print("===================================================")
+        for i in range(len(pembayaran)):
+            if pembayaran[i]["net"] == "swap":
+                print(f"[Ditukar otomatis] {pembayaran[i]["nama"]} sekarang berhutang {pembayaran[i]["hutang"]} ke {pembayaran[i]["ke"]}")
+            elif pembayaran[i]["net"] == "tambah":
+                print(f"[Ditambahkan otomatis] {pembayaran[i]["nama"]} berhutang sebanyak {pembayaran[i]["jumlah"]} ke {pembayaran[i]["ke"]}")
+            elif pembayaran[i]["net"] == "gabung":
+                try:    
+                    if pembayaran[i]["status"]:
+                        print(f"[Digabungkan otomatis] {pembayaran[i]["nama"]} berhutang sebanyak {pembayaran[i]["jumlah"]} ke {pembayaran[i]["ke"]} [Status Lunas!]")
+                    else:          
+                        print(f"[Digabungkan otomatis] {pembayaran[i]["nama"]} berhutang sebanyak {pembayaran[i]["jumlah"]} ke {pembayaran[i]["ke"]} [Status belum Lunas!]")
+                except KeyError: continue
+            elif pembayaran[i]["net"] == "bayar":
+                print(f"[Pembayaran] {pembayaran[i]["nama"]} membayar sebanyak {pembayaran[i]["bayar"]} ke {pembayaran[i]["ke"]}, sisa hutang = {pembayaran[i]["sisa"]} {"Status lunas" if pembayaran[i]["sisa"] <= 0.0 else "Belum lunas"}")
+            elif pembayaran[i]["net"] == "simpel":
+                print(f"[Simplikasi] Hutang {pembayaran[i]["nama2"]} ke {pembayaran[i]["nama3"]} jadi {pembayaran[i]["nama1"]} ke {pembayaran[i]["nama3"]}, sisa {pembayaran[i]["nama1"]} ke {pembayaran[i]["nama2"]} = {pembayaran[i]["jumlah"]}")
+            else:
+                print(f"[{i}] [Error]")
+            
+ 
  

@@ -1,5 +1,6 @@
 import Pencatatan
 import Database
+import History
 
 def Flat(participant, payer):
     historyr = []
@@ -83,26 +84,25 @@ def Net_Debt():
                     nama = debt[i]["nama"]
                     debt[i]["nama"] = debt[i]["ke"]
                     debt[i]["ke"] = nama
-                    sisa = debt[i]["jumlah"] / -1
-                    srh = {"nama": debt[i]["ke"], "hutang": debt[i]["jumlah"], "ke": debt[i]["nama"], "sisa": sisa, "status": "Ditukar", "net": "swap"}
-                    debt[i]["jumlah"] = sisa
+                    debt[i]["jumlah"] = debt[i]["jumlah"] / -1
+                    srh = {"nama": debt[i]["ke"], "hutang": debt[i]["jumlah"], "ke": debt[i]["nama"], "net": "swap"}
                     rihu.append(srh)                 
                 if debt[i]["nama"] == debt[j]["nama"] and debt[i]["ke"] == debt[j]["ke"]:
                     jmlh = debt[i]["jumlah"] + debt[j]["jumlah"]
-                    srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} + {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"], "status": "Belum lunas", "net": "tambah"}
+                    srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} + {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"], "net": "tambah"}
                     debt[i]["jumlah"] = jmlh
                     rihu.append(srh)
                     debt[j]["ke"] = ""
                 elif debt[i]["nama"] == debt[j]["ke"] and debt[i]["ke"] == debt[j]["nama"]:
                     if debt[i]["jumlah"] > debt[j]["jumlah"]:
                         jmlh = debt[i]["jumlah"] - debt[j]["jumlah"]
-                        srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} - {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"], "status": "Belum lunas", "net": "gabung"}
+                        srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} - {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"], "net": "gabung"}
                         debt[i]["jumlah"] = jmlh
                         rihu.append(srh)
                         debt[j]["ke"] = ""
                     elif debt[i]["jumlah"] < debt[j]["jumlah"]:
                         jmlh = debt[j]["jumlah"] - debt[i]["jumlah"]
-                        srh = {"nama": debt[j]["nama"], "jumlah": f"{debt[j]["jumlah"]} - {debt[i]["jumlah"]} = {jmlh}", "ke": debt[j]["ke"], "status": "Belum lunas", "net": "gabung"}
+                        srh = {"nama": debt[j]["nama"], "jumlah": f"{debt[j]["jumlah"]} - {debt[i]["jumlah"]} = {jmlh}", "ke": debt[j]["ke"], "net": "gabung"}
                         debt[j]["jumlah"] = jmlh
                         rihu.append(srh)                        
                         debt[i]["ke"] = ""
@@ -121,3 +121,42 @@ def Net_Debt():
     simpan = {"users": p[0], "riwayat": p[1], "hutang": debt, "rh": rihu}
     Database.Save(simpan)
     return [debt, rihu]
+
+def elimination():
+    p = Database.akses()
+    hutang = p[2]
+    rihu = p[3]
+    print("============  Simplikasi  ============")
+    History.History_Hutang(hutang)
+    print("======================================")
+    for x in hutang:
+        for y in hutang:
+            if x["ke"] == y["nama"]:
+                if x["jumlah"] == y["jumlah"]:
+                    x["ke"] = y["ke"]
+                    srh = {"nama1": x["nama"], "nama2": y["ke"], "nama3": x["ke"], "jumlah": x["jumlah"], "net": "simpel"}
+                    rihu.append(srh)
+                    y["ke"] = ""
+                elif x["jumlah"] > y["jumlah"]:
+                    y["nama"] = x["nama"]
+                    x["jumlah"] = x["jumlah"] - y["jumlah"]
+                    srh = {"nama1": x["nama"], "nama2": x["ke"], "nama3": y["ke"], "jumlah": x["jumlah"], "net": "simpel"}
+                    rihu.append(srh)
+                elif x["jumlah"] < y["jumlah"]:
+                    x["ke"] = y["ke"]
+                    y["jumlah"] = y["jumlah"] - x["jumlah"]
+                    srh = {"nama1": x["nama"], "nama2": y["nama"], "nama3": x["ke"], "jumlah": y["jumlah"], "net": "simpel"}
+                    rihu.append(srh)
+                else:
+                    print("error")
+    for i in range(len(hutang), -1, -1):
+        try:
+            if hutang[i]["ke"] == "":
+                hutang.pop(i)
+        except IndexError: pass
+    simpan = {"users": p[0], "riwayat": p[1], "hutang": hutang, "rh": rihu}
+    Database.Save(simpan)
+
+    Net_Debt()
+    p = Database.akses()
+    History.History_Hutang(p[2])

@@ -24,12 +24,12 @@ try:
     while True:
         print("========  HITUNG BARENG ========")
         print("menu:")
-        print("     1. Tambahkan anggota baru.")
-        print("     2. Catat transaksi.")
-        print("     3. Riwayat.")
-        print("     4. Pembayaran.")
-        print("     5. Fitur tambahan.")
-        print("     6. Keluar.")
+        print("     [1] Tambahkan anggota baru.")
+        print("     [2] Catat transaksi.")
+        print("     [3] Riwayat.")
+        print("     [4] Pembayaran.")
+        print("     [5] Fitur tambahan.")
+        print("     [6] Keluar.")
 
         fitur = Pencatatan.Check(pesan="Input angka untuk mengakses menu: ", eror="input tidak valid")
         if fitur == 1:
@@ -52,6 +52,7 @@ try:
                     break
                 elif r == 2:
                     Calculation.Net_Debt()
+                    Calculation.elimination()
                     try:
                         if p[2] == []:
                             print("Riwayat hutang kosong.")
@@ -64,8 +65,23 @@ try:
         elif fitur == 4:
             Pencatatan.pay()
         elif fitur == 5:
-            User.Show_Users()
-            User.Delete_User()
+            print("========  Fitur Tambahan ========")
+            print("")
+            print("     [1] Tampilkan Anggota.")
+            print("     [2] Hapus Anggota.")
+            print("     [3] Tampilkan Riwayat Perhitungan.")
+            print("     [4] Bersihkan Riwayat Perhitungan.")
+            pilih = Pencatatan.Check(pesan="pilih: ", eror="input tidak valid")
+            if pilih == 1:
+                User.Show_Users()
+            elif pilih == 2:
+                User.Delete_User()
+            elif pilih == 3:
+                History.History_Perhitungan()
+            elif pilih == 4:
+                Database.clearrh()
+            else:
+                print("fitur baru akan segera hadir!!")
         elif fitur == 6:
             print("=================  Terimakasih!!  =================")
             break

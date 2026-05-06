@@ -1,6 +1,7 @@
-a = 1000
-b = 7000
-jmlh = a + b
+import Database
+import Calculation
+import History
 
-srh = {"nama": "Iann", "jumlah": f"{a} - {b} = {jmlh}", "ke": "haikal"}
-print(srh)
+Calculation.elimination()
+
+
