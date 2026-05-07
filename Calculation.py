@@ -73,6 +73,9 @@ def Net_Debt():
     debt = p[2]
     rihu = p[3]
     panjang = len(debt)
+    waktu = Pencatatan.Timeisit()
+    srh = {"net": "waktu", "waktu": waktu}
+    rihu.append(srh)
     try:    
         for i in range(panjang):
             for j in range(panjang):
@@ -120,15 +123,19 @@ def Net_Debt():
         except IndexError: pass
     simpan = {"users": p[0], "riwayat": p[1], "hutang": debt, "rh": rihu}
     Database.Save(simpan)
+
+    p = Database.akses()
+    History.History_Hutang(p[2])
     return [debt, rihu]
 
 def elimination():
     p = Database.akses()
     hutang = p[2]
     rihu = p[3]
-    print("============  Simplikasi  ============")
-    History.History_Hutang(hutang)
-    print("======================================")
+    waktu = Pencatatan.Timeisit()
+    srh = {"net": "waktu", "waktu": waktu}
+    rihu.append(srh)
+    print("===================  Simplikasi  ==================")
     for x in hutang:
         for y in hutang:
             if x["ke"] == y["nama"]:
@@ -157,6 +164,5 @@ def elimination():
     simpan = {"users": p[0], "riwayat": p[1], "hutang": hutang, "rh": rihu}
     Database.Save(simpan)
 
-    Net_Debt()
     p = Database.akses()
     History.History_Hutang(p[2])

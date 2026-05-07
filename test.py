@@ -6,5 +6,6 @@ import Calculation
 #Calculation.Net_Debt()
 #Pencatatan.pay()
 
-#Calculation.Net_Debt()
-Calculation.elimination()
+x = Pencatatan.Timeisit()
+p = {"net": x}
+print(p["net"])

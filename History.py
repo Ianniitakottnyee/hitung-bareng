@@ -119,6 +119,8 @@ def History_Perhitungan():
                 print(f"[Pembayaran] {pembayaran[i]["nama"]} membayar sebanyak {pembayaran[i]["bayar"]} ke {pembayaran[i]["ke"]}, sisa hutang = {pembayaran[i]["sisa"]} {"Status lunas" if pembayaran[i]["sisa"] <= 0.0 else "Belum lunas"}")
             elif pembayaran[i]["net"] == "simpel":
                 print(f"[Simplikasi] Hutang {pembayaran[i]["nama2"]} ke {pembayaran[i]["nama3"]} jadi {pembayaran[i]["nama1"]} ke {pembayaran[i]["nama3"]}, sisa {pembayaran[i]["nama1"]} ke {pembayaran[i]["nama2"]} = {pembayaran[i]["jumlah"]}")
+            elif pembayaran[i]["net"] == "waktu":
+                print(pembayaran[i]["waktu"])       
             else:
                 print(f"[{i}] [Error]")
             

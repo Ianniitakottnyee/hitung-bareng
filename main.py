@@ -51,13 +51,17 @@ try:
                     except KeyError: print("Belum ada riwayat transaksi.")
                     break
                 elif r == 2:
-                    Calculation.Net_Debt()
-                    Calculation.elimination()
                     try:
                         if p[2] == []:
                             print("Riwayat hutang kosong.")
                         else:
                             History.History_Hutang(p[2])
+                            print("[1] Rapikan\n[2] Simplikasi\n[3] Keluar")
+                            simp = Pencatatan.Check(pesan="menu: ", eror="Input hanya berbentuk angka!")
+                            if simp == 1:
+                                Calculation.Net_Debt()
+                            elif simp == 2:
+                                Calculation.elimination()
                     except KeyError: print("Riwayat hutang kosong.")
                     break
                 else:
