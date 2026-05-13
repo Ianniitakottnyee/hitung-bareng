@@ -92,7 +92,7 @@ def Net_Debt():
                     rihu.append(srh)                 
                 if debt[i]["nama"] == debt[j]["nama"] and debt[i]["ke"] == debt[j]["ke"]:
                     jmlh = debt[i]["jumlah"] + debt[j]["jumlah"]
-                    srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} + {debt[j]["jumlah"]} = {jmlh}", "ke": debt[i]["ke"], "net": "tambah"}
+                    srh = {"nama": debt[i]["nama"], "jumlah": f"{debt[i]["jumlah"]} + {debt[j]["jumlah"]} = {jmlh}", "ke": debt[j]["ke"], "net": "tambah"}
                     debt[i]["jumlah"] = jmlh
                     rihu.append(srh)
                     debt[j]["ke"] = ""

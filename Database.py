@@ -37,3 +37,20 @@ def clearrh():
         simpan = {"users": p[0], "riwayat": p[1], "hutang": p[2], "rh": []}
         Save(simpan)
         print("Riwayat perhitungan berhasil dihapus!")
+
+def openbackup():
+    with open("backup.json", "r") as f:
+        loaded = json.load(f)
+
+    with open("data.json", "w") as f:
+        json.dump(loaded, f)
+
+def upbackup():
+    with open("data.json", "r") as f:
+        loaded = json.load(f)
+
+    with open("backup.json", "w") as f:
+        json.dump(loaded, f)
+
+    with open("data.json", "w") as f:
+        json.dump({}, f)

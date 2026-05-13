@@ -75,6 +75,8 @@ try:
             print("     [2] Hapus Anggota.")
             print("     [3] Tampilkan Riwayat Perhitungan.")
             print("     [4] Bersihkan Riwayat Perhitungan.")
+            print("     [5] Backup Data.")
+            print("     [0] Ambil data dari backup.")
             pilih = Pencatatan.Check(pesan="pilih: ", eror="input tidak valid")
             if pilih == 1:
                 User.Show_Users()
@@ -84,6 +86,10 @@ try:
                 History.History_Perhitungan()
             elif pilih == 4:
                 Database.clearrh()
+            elif pilih == 5:
+                Database.upbackup()
+            elif pilih == 0:
+                Database.openbackup()
             else:
                 print("fitur baru akan segera hadir!!")
         elif fitur == 6:
