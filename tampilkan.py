@@ -1,5 +1,5 @@
 import Pencatatan
-import Database
+import pengelolaan
 
 space = ""
 
@@ -95,7 +95,7 @@ def History_Hutang(hutang):
         i += 1
 
 def History_Perhitungan():
-    p = Database.akses()
+    p = pengelolaan.akses()
     pembayaran = p[3]
     if pembayaran == []:
         print("Riwayat perhitungan kosong!!")

@@ -1,16 +1,16 @@
 import Pencatatan
-import User
-import Calculation
-import History
+import anggota
+import perhitungan
+import tampilkan
 import time
-import Database
+import pengelolaan
 suasana = time.localtime()
 
 try:
-    Database.Open()
+    pengelolaan.Open()
 except ValueError:
     kurawal = {}
-    Database.Save(kurawal)
+    pengelolaan.Save(kurawal)
 
 if suasana[3]<4 or suasana[3]>19:
     print("Selamat malam!")
@@ -34,11 +34,11 @@ try:
         fitur = Pencatatan.Check(pesan="Input angka untuk mengakses menu: ", eror="input tidak valid")
         if fitur == 1:
             print("==== Menu Tambahkan Anggota ====")
-            User.Add_Users()
+            anggota.Add_Users()
         elif fitur == 2:
             Pencatatan.Transaction()
         elif fitur == 3:
-            p = Database.akses()
+            p = pengelolaan.akses()
             while True:
                 print("Riwayat:\n1. Transaksi.\n2. Hutang.")
                 r = Pencatatan.Check(pesan="riwayat: ", eror="mode yang dipilih tidak valid!")            
@@ -47,7 +47,7 @@ try:
                         if p[1] == []:
                             print("Belum ada riwayat transaksi.")
                         else:
-                            History.History(p[1])
+                            tampilkan.History(p[1])
                     except KeyError: print("Belum ada riwayat transaksi.")
                     break
                 elif r == 2:
@@ -55,13 +55,13 @@ try:
                         if p[2] == []:
                             print("Riwayat hutang kosong.")
                         else:
-                            History.History_Hutang(p[2])
+                            tampilkan.History_Hutang(p[2])
                             print("[1] Rapikan\n[2] Simplikasi\n[3] Keluar")
                             simp = Pencatatan.Check(pesan="menu: ", eror="Input hanya berbentuk angka!")
                             if simp == 1:
-                                Calculation.Net_Debt()
+                                perhitungan.Net_Debt()
                             elif simp == 2:
-                                Calculation.elimination()
+                                perhitungan.elimination()
                     except KeyError: print("Riwayat hutang kosong.")
                     break
                 else:
@@ -79,17 +79,17 @@ try:
             print("     [0] Ambil data dari backup.")
             pilih = Pencatatan.Check(pesan="pilih: ", eror="input tidak valid")
             if pilih == 1:
-                User.Show_Users()
+                anggota.Show_Users()
             elif pilih == 2:
-                User.Delete_User()
+                anggota.Delete_User()
             elif pilih == 3:
-                History.History_Perhitungan()
+                tampilkan.History_Perhitungan()
             elif pilih == 4:
-                Database.clearrh()
+                pengelolaan.clearrh()
             elif pilih == 5:
-                Database.upbackup()
+                pengelolaan.upbackup()
             elif pilih == 0:
-                Database.openbackup()
+                pengelolaan.openbackup()
             else:
                 print("fitur baru akan segera hadir!!")
         elif fitur == 6:

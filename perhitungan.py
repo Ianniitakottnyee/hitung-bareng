@@ -1,6 +1,6 @@
 import Pencatatan
-import Database
-import History
+import pengelolaan
+import tampilkan
 
 def Flat(participant, payer):
     historyr = []
@@ -17,7 +17,7 @@ def Flat(participant, payer):
             else:
                 harga = harga - (harga % 1000) + 1000
 
-    p = Database.akses()
+    p = pengelolaan.akses()
     debt = p[2]
     for i in range(len(participant)):
         riwayatr = {"nama" : participant[i]}
@@ -54,7 +54,7 @@ def Per_Item(participant, payer):
         pemilik = {"punya": participant[i], "produk": produk, "total": jum}
         list_peritem.append(pemilik)
         
-        p = Database.akses()
+        p = pengelolaan.akses()
         debt = p[2]    
     for i in range(len(list_peritem)):
         hutang = {}
@@ -69,7 +69,7 @@ def Per_Item(participant, payer):
     
 
 def Net_Debt():
-    p = Database.akses()
+    p = pengelolaan.akses()
     debt = p[2]
     rihu = p[3]
     panjang = len(debt)
@@ -122,14 +122,14 @@ def Net_Debt():
                 debt.pop(i)
         except IndexError: pass
     simpan = {"users": p[0], "riwayat": p[1], "hutang": debt, "rh": rihu}
-    Database.Save(simpan)
+    pengelolaan.Save(simpan)
 
-    p = Database.akses()
-    History.History_Hutang(p[2])
+    p = pengelolaan.akses()
+    tampilkan.History_Hutang(p[2])
     return [debt, rihu]
 
 def elimination():
-    p = Database.akses()
+    p = pengelolaan.akses()
     hutang = p[2]
     rihu = p[3]
     waktu = Pencatatan.Timeisit()
@@ -162,7 +162,7 @@ def elimination():
                 hutang.pop(i)
         except IndexError: pass
     simpan = {"users": p[0], "riwayat": p[1], "hutang": hutang, "rh": rihu}
-    Database.Save(simpan)
+    pengelolaan.Save(simpan)
 
-    p = Database.akses()
-    History.History_Hutang(p[2])
+    p = pengelolaan.akses()
+    tampilkan.History_Hutang(p[2])

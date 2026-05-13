@@ -1,7 +1,7 @@
 import Pencatatan
-import History
-import Database
-import Calculation
+import tampilkan
+import pengelolaan
+import perhitungan
 
 #Calculation.Net_Debt()
 #Pencatatan.pay()

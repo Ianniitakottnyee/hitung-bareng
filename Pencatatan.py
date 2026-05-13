@@ -1,8 +1,8 @@
-import User
+import anggota
 import time
-import Calculation
-import Database
-import History
+import perhitungan
+import pengelolaan
+import tampilkan
 """
 history = {}
 riwayat = []
@@ -20,7 +20,7 @@ def Transaction():
             break
         else: print("mode tidak valid")
 
-    User.Show_Users()
+    anggota.Show_Users()
     participant = []
     payer = None
     while payer == None:
@@ -46,7 +46,7 @@ def Transaction():
         participant.pop(inx)
     except UnboundLocalError: ...
     
-    t = Database.akses()
+    t = pengelolaan.akses()
     riwayat = t[1]
     try:
         trans = riwayat[-1]["trans"] + 1
@@ -56,18 +56,18 @@ def Transaction():
     jam = Timeisit()
 
     if mode == 1:
-        f = Calculation.Flat(participant, payer)
+        f = perhitungan.Flat(participant, payer)
         history = {"part": f[0], "deskripsi": deskripsi, "waktu": jam, "payer": payer,"produk":f[1], "harga": f[2], "tipe": "f", "trans": trans}
         riwayat.append(history)
         simpan = {"users": t[0], "riwayat": riwayat, "hutang": f[3], "rh": t[3], "trans": trans}
     else: 
-        p = Calculation.Per_Item(participant, payer)
+        p = perhitungan.Per_Item(participant, payer)
         history = {"part": p[0], "deskripsi": deskripsi, "waktu": jam, "payer": payer, "tipe": "p"}
         riwayat.append(history)
         simpan = {"users": t[0], "riwayat": riwayat, "hutang": p[1], "rh": t[3]}
   
     print("Transaksi berhasil dicatat!")
-    Database.Save(simpan)
+    pengelolaan.Save(simpan)
     
 
 def Check(pesan, eror):
@@ -84,7 +84,7 @@ def Validparticipant(pesan, error, re):
     try:
         id_ = int(valid)
     except ValueError: id_ = valid
-    p = Database.akses()
+    p = pengelolaan.akses()
     anggota = p[0]
     for x in anggota:
         if valid.lower() == x["nama"].lower() or id_ == x["id"]:
@@ -95,7 +95,7 @@ def Validparticipant(pesan, error, re):
     else:
         repeat = input(error)
         if repeat.lower() == "ya":
-            User.Add_Users()
+            anggota.Add_Users()
             print("Berhasil menambahkan anggota baru!")
         else:
             print(re)
@@ -146,10 +146,10 @@ def description(teks, panjang=60):
     return chat
 
 def pay():
-    p = Database.akses()
+    p = pengelolaan.akses()
     hutang = p[2]
     rihu = p[3]
-    History.History_Hutang(hutang)
+    tampilkan.History_Hutang(hutang)
 
     print("============  Pembayaran  ============")
     payer = None
@@ -178,7 +178,7 @@ def pay():
             hutangs = hutang[i]["jumlah"]
             hutang[i]["jumlah"] = hutang[i]["jumlah"] - jumlah
             
-            Calculation.Net_Debt()
+            perhitungan.Net_Debt()
 
             riwayathutang = {"nama": hutang[i]["nama"], "hutang": hutangs, "ke": hutang[i]["ke"], "bayar": jumlah, "sisa": hutang[i]["jumlah"], "status": f"Lunas" if {hutang[i]["jumlah"] == 0} else "Belum lunas", "net": "bayar"}
             rihu.append(riwayathutang)
@@ -193,6 +193,6 @@ def pay():
                 print(f"{hutang[i]["ke"]} sekarang berhutang {cetak} ke {hutang[i]["nama"]}")
 
             simpan = {"users": p[0], "riwayat": p[1], "hutang": hutang, "rh": rihu}
-            Database.Save(simpan)
+            pengelolaan.Save(simpan)
 
             break

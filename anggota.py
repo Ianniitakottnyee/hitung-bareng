@@ -1,4 +1,4 @@
-import Database
+import pengelolaan
 
 users = []
 
@@ -6,7 +6,7 @@ def Add_Users():
     user = {}
     Show_Users()
 
-    p = Database.akses()
+    p = pengelolaan.akses()
     users = p[0]
     if users == []:
         id = 0
@@ -34,11 +34,11 @@ def Add_Users():
                 i+=1
 
     simpan = {"users": users, "riwayat": p[1], "hutang": p[2], "rh": p[3]}
-    Database.Save(simpan)
+    pengelolaan.Save(simpan)
 
 
 def Show_Users():
-    p = Database.akses()
+    p = pengelolaan.akses()
     users = p[0]
     print("+----+--------------+------------------+")
     print(f"|No  |      {"ID".ljust(7)} |       {"Nama".ljust(8)}   | ")
@@ -55,7 +55,7 @@ def Show_Users():
 
 def Delete_User():
     Show_Users()
-    p = Database.akses()
+    p = pengelolaan.akses()
     users = p[0]
     if users[0] == None:
         print("Belum ada anggota yang terdaftar!")
@@ -68,7 +68,7 @@ def Delete_User():
                     users.pop(i)
                     print("Users berhasil dihapus!")
                     simpan = {"users": users, "riwayat": p[1], "hutang": p[2], "rh": p[3]}
-                    Database.Save(simpan)
+                    pengelolaan.Save(simpan)
                     Show_Users()
                     ditemukan = True
                     break
