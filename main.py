@@ -6,6 +6,7 @@ import time
 import pengelolaan
 suasana = time.localtime()
 
+#a
 try:
     pengelolaan.buka()
 except ValueError:
