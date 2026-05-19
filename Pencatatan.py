@@ -3,11 +3,8 @@ import time
 import perhitungan
 import pengelolaan
 import tampilkan
-"""
-history = {}
-riwayat = []
-simpan = {}
-"""
+
+
 def Transaction():
     print("Pilih mode:\n1. Pembagian Rata\n2. Pencatatan per-item")
     while True:

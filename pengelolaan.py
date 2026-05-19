@@ -7,14 +7,14 @@ def Save(simpan):
         json.dump(simpan, f)
 
 
-def Open():
+def buka():
     with open("data.json", "r") as f:
         loaded = json.load(f)
     return loaded
 
 
 def akses():
-    data = Open()
+    data = buka()
     try:
         users = data["users"]
     except KeyError: users = []

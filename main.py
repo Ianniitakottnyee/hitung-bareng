@@ -7,7 +7,7 @@ import pengelolaan
 suasana = time.localtime()
 
 try:
-    pengelolaan.Open()
+    pengelolaan.buka()
 except ValueError:
     kurawal = {}
     pengelolaan.Save(kurawal)
